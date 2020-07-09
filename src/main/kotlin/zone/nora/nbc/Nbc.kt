@@ -23,10 +23,19 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiChat
+import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.Mod.EventHandler
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import net.minecraftforge.fml.common.gameevent.InputEvent
+import net.minecraftforge.fml.common.gameevent.TickEvent
 import zone.nora.nbc.gson.SerializedChatWindow
+import zone.nora.nbc.gui.NbcChatGui
+import zone.nora.nbc.gui.NbcGuiInGame
+import zone.nora.nbc.gui.components.ChatWindowComponent
 import java.io.File
 
 @Mod(modid = "NBC", name = "Nora's Better Chat", version = "1.0", modLanguage = "kotlin")
@@ -35,9 +44,41 @@ class Nbc {
     fun init(e: FMLInitializationEvent) {
         val directory = File(configDirectory())
         if (!directory.exists()) directory.mkdirs()
+
+        configuration = refreshChatConfig()
+        inGameGui = NbcGuiInGame(Minecraft.getMinecraft())
+        Minecraft.getMinecraft().ingameGUI = inGameGui
+
+        MinecraftForge.EVENT_BUS.register(this)
+    }
+
+    @SubscribeEvent
+    fun joinWorld(e: WorldEvent.Load) {
+        Minecraft.getMinecraft().ingameGUI = inGameGui
+    }
+
+    @SubscribeEvent
+    fun renderTick(e: TickEvent.RenderTickEvent) {
+        if (Minecraft.getMinecraft().currentScreen != null && Minecraft.getMinecraft().currentScreen !is GuiChat) return
+        if (e.phase != TickEvent.Phase.END) return
+        try { NbcChatGui.window.draw() } catch (_: Exception) { }
+    }
+
+    @SubscribeEvent
+    fun onChatKeys(e: InputEvent) {
+        val mc = Minecraft.getMinecraft()
+            if (mc.gameSettings.keyBindChat.isKeyDown) {
+                mc.displayGuiScreen(NbcChatGui())
+            } else if (mc.gameSettings.keyBindCommand.isKeyDown) {
+                NbcChatGui.window.childrenOfType<ChatWindowComponent>().forEach {
+                    if (it.chatInput.active) if (it.chatInput.text.isBlank()) it.chatInput.text = "/"
+                }
+                mc.displayGuiScreen(NbcChatGui())
+            }
     }
 
     companion object {
+        lateinit var inGameGui: NbcGuiInGame
         var configuration: ArrayList<SerializedChatWindow> = ArrayList()
 
         fun configDirectory(): String = "${Minecraft.getMinecraft().mcDataDir}/NBC/"

@@ -52,12 +52,16 @@ repositories {
     }
 }
 
+configurations {
+    provided
+    compile.extendsFrom(provided)
+}
+
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-reflect"
-    implementation ("club.sk1er:Elementa:96-10809-SNAPSHOT") {
+    compile ("club.sk1er:Elementa:96-10809-SNAPSHOT") {
         exclude group: 'UniversalCraft'
     }
-    implementation "club.sk1er:UniversalCraft:68-10809-SNAPSHOT"
+    compile "club.sk1er:UniversalCraft:68-10809-SNAPSHOT"
 }
 
 processResources
@@ -80,8 +84,19 @@ processResources
     }
 }
 
+shadowJar {
+    relocate("club.sk1er", "zone.nora.nbc.libs.club.sk1er")
+}
+
 jar {
-    from configurations.provided.asFileTree.files.collect {
+    from configurations.compile.asFileTree.files.collect {
         zipTree(it)
+    }
+    exclude("dummyThing")
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 }

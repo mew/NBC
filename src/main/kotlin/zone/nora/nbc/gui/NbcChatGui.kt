@@ -30,6 +30,10 @@ class NbcChatGui : GuiChat() {
         super.initGui()
     }
 
+    override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
+        // nothing
+    }
+
     override fun mouseClicked(mouseX: Int, mouseY: Int, mouseButton: Int) {
         window.mouseClick(mouseX, mouseY, mouseButton)
         super.mouseClicked(mouseX, mouseY, mouseButton)

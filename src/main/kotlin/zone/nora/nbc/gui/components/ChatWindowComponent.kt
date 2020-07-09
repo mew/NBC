@@ -173,7 +173,7 @@ class ChatWindowComponent(val windowConfig: SerializedChatWindow) : UIBlock(Colo
             height = FillConstraint() - 10.pixels()
         } childOf this //effect ScissorEffect()
 
-        scroller = ScrollComponent(scrollOpposite = true).constrain {
+        scroller = ChatScrollerComponent(scrollOpposite = true).constrain {
             width = FillConstraint()
             height = FillConstraint()
         }.onMouseScroll { delta ->
