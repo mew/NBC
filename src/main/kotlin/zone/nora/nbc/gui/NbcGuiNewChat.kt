@@ -1,3 +1,21 @@
+/*
+ * Nora's Better Chat
+ * Copyright (C) 2020 Nora Cos
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package zone.nora.nbc.gui
 
 import club.sk1er.mods.core.universal.ChatColor
@@ -8,10 +26,6 @@ import org.apache.logging.log4j.LogManager
 import zone.nora.nbc.gui.components.ChatWindowComponent
 import zone.nora.nbc.util.TimedChatLine
 
-/*
- * Created by Nora Cos on 22/05/20.
- * Last modified 24/05/20.
- */
 class NbcGuiNewChat(mc: Minecraft) : GuiNewChat(mc) {
     override fun printChatMessage(p_146227_1_: IChatComponent?) {
         printChatMessageWithOptionalDeletion(p_146227_1_!!, 0)
