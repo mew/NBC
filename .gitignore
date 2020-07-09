@@ -3,3 +3,5 @@ eclipse/
 *.iml
 *.ipr
 *.iws
+build/
+run/
