@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package zone.nora.nbc.gui
+package zone.nora.nbc.gui.chat
 
 import club.sk1er.elementa.components.Window
 import net.minecraft.client.gui.GuiChat
@@ -26,7 +26,7 @@ import zone.nora.nbc.gui.components.ChatWindowComponent
 
 class NbcChatGui : GuiChat() {
     override fun initGui() {
-        if (window.childrenOfType<ChatWindowComponent>().isEmpty()) Nbc.configuration.forEach { window.addChild(ChatWindowComponent(it)) }
+        addWindows()
         super.initGui()
     }
 
@@ -57,5 +57,11 @@ class NbcChatGui : GuiChat() {
 
     companion object {
         val window = Window()
+
+        fun addWindows() {
+            if (window.childrenOfType<ChatWindowComponent>().isEmpty()) Nbc.configuration.forEach {
+                window.addChild(ChatWindowComponent(it))
+            }
+        }
     }
 }

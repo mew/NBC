@@ -7,13 +7,14 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.InputEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import zone.nora.nbc.Nbc
-import zone.nora.nbc.gui.NbcChatGui
+import zone.nora.nbc.gui.chat.NbcChatGui
 import zone.nora.nbc.gui.components.ChatWindowComponent
 
 class EventListener {
     @SubscribeEvent
     fun onWorldLoad(e: WorldEvent.Load) {
         Minecraft.getMinecraft().ingameGUI = Nbc.inGameGui
+        NbcChatGui.addWindows()
     }
 
     @SubscribeEvent

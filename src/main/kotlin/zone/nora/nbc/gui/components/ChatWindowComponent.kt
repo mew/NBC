@@ -27,7 +27,7 @@ import club.sk1er.elementa.dsl.*
 import club.sk1er.elementa.effects.ScissorEffect
 import club.sk1er.elementa.utils.getStringSplitToWidth
 import zone.nora.nbc.gson.SerializedChatWindow
-import zone.nora.nbc.gui.NbcChatGui
+import zone.nora.nbc.gui.chat.NbcChatGui
 import zone.nora.nbc.util.DelayedTask
 import zone.nora.nbc.util.TimedChatLine
 import java.awt.Color

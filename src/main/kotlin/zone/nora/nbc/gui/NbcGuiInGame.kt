@@ -21,6 +21,7 @@ package zone.nora.nbc.gui
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiNewChat
 import net.minecraftforge.client.GuiIngameForge
+import zone.nora.nbc.gui.chat.NbcGuiNewChat
 
 class NbcGuiInGame(mc: Minecraft) : GuiIngameForge(mc) {
     private val persistentChatGui = NbcGuiNewChat(mc)

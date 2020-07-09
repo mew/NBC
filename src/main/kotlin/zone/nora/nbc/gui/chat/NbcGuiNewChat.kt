@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package zone.nora.nbc.gui
+package zone.nora.nbc.gui.chat
 
 import club.sk1er.mods.core.universal.ChatColor
 import net.minecraft.client.Minecraft
