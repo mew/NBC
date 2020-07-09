@@ -18,11 +18,15 @@
 
 package zone.nora.nbc
 
+import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import net.minecraft.client.Minecraft
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.Mod.EventHandler
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
+import zone.nora.nbc.gson.SerializedChatWindow
 import java.io.File
 
 @Mod(modid = "NBC", name = "Nora's Better Chat", version = "1.0", modLanguage = "kotlin")
@@ -34,18 +38,102 @@ class Nbc {
     }
 
     companion object {
+        var configuration: ArrayList<SerializedChatWindow> = ArrayList()
+
         fun configDirectory(): String = "${Minecraft.getMinecraft().mcDataDir}/NBC/"
 
-        fun refreshChatConfig() {
+        fun refreshChatConfig(): ArrayList<SerializedChatWindow> {
             val chatConfigFile = File("${configDirectory()}ChatWindows.json")
             val chatConfigJson = if (chatConfigFile.exists()) {
                 chatConfigFile.readText()
             } else {
                 chatConfigFile.createNewFile()
-                "TODO"
+                chatConfigFile.writeText(DEFAULT_CONFIGURATION)
+                DEFAULT_CONFIGURATION
             }
+            val jsonArray: JsonArray = try {
+                JsonParser().parse(chatConfigJson).asJsonArray
+            } catch (_: Exception) {
+                JsonParser().parse(DEFAULT_CONFIGURATION).asJsonArray
+            }
+            return Gson().fromJson(jsonArray, typeToken<ArrayList<SerializedChatWindow>>())
         }
 
         private inline fun <reified T> typeToken() = object: TypeToken<T>() {}.type
+
+        private const val DEFAULT_CONFIGURATION = "[\n" +
+            "  {\n" +
+            "    \"title\": \"Primary Chat\",\n" +
+            "    \"constraints\": {\n" +
+            "      \"x\": {\n" +
+            "        \"position\": 0\n" +
+            "      },\n" +
+            "      \"y\": {\n" +
+            "        \"position\": 0,\n" +
+            "        \"align_opposite\": true\n" +
+            "      },\n" +
+            "      \"width\": 350,\n" +
+            "      \"height\": 200\n" +
+            "    },\n" +
+            "    \"tabs\": [\n" +
+            "      {\n" +
+            "        \"title\": \"All\",\n" +
+            "        \"filter\": [\n" +
+            "          \"CF-A\"\n" +
+            "        ]\n" +
+            "      },\n" +
+            "      {\n" +
+            "        \"title\": \"Guild\",\n" +
+            "        \"filter\": [\n" +
+            "          \"CF-G\"\n" +
+            "        ],\n" +
+            "        \"hide_in_all\": true,\n" +
+            "        \"prefix\": \"/gc \"\n" +
+            "      },\n" +
+            "      {\n" +
+            "        \"title\": \"Party\",\n" +
+            "        \"filter\": [\n" +
+            "          \"CF-P\"\n" +
+            "        ],\n" +
+            "        \"hide_in_all\": true,\n" +
+            "        \"prefix\": \"/pc \"\n" +
+            "      },\n" +
+            "      {\n" +
+            "        \"title\": \"Co-op\",\n" +
+            "        \"filter\": [\n" +
+            "          \"CF-C\"\n" +
+            "        ],\n" +
+            "        \"hide_in_all\": true,\n" +
+            "        \"prefix\": \"/cc \"\n" +
+            "      }\n" +
+            "    ]\n" +
+            "  },\n" +
+            "  {\n" +
+            "    \"title\": \"Secondary Chat\",\n" +
+            "    \"constraints\": {\n" +
+            "      \"x\": {\n" +
+            "        \"position\": 10,\n" +
+            "        \"align_opposite\": true\n" +
+            "      },\n" +
+            "      \"y\": {\n" +
+            "        \"position\": 5,\n" +
+            "        \"align_opposite\": true\n" +
+            "      },\n" +
+            "      \"width\": 250,\n" +
+            "      \"height\": 200\n" +
+            "    },\n" +
+            "    \"tabs\": [\n" +
+            "      {\n" +
+            "        \"title\": \"DMs\",\n" +
+            "        \"filter\": [\n" +
+            "          \"From \",\n" +
+            "          \"To \"\n" +
+            "        ],\n" +
+            "        \"hide_in_all\": true,\n" +
+            "        \"prefix\": \"/w \"\n" +
+            "      }\n" +
+            "    ]\n" +
+            "  }\n" +
+            "]"
     }
 }
