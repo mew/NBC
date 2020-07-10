@@ -29,4 +29,40 @@ class SerializedChatWindow {
 
     @SerializedName("tabs")
     val tabs: ArrayList<SerializedChatTab> = ArrayList()
+
+    override fun toString(): String = """{
+        |   "title": "$title"
+        |   "constraints": {
+        |       "x": {
+        |           "position": ${constraints.x.position},
+        |           "align_opposite": ${constraints.x.alignOpposite}
+        |       },
+        |       "y": {
+        |           "position": ${constraints.y.position},
+        |           "align_opposite": ${constraints.y.alignOpposite}
+        |       },
+        |       "width": ${constraints.width},
+        |       "height": ${constraints.height}
+        |   },
+        |   "tabs": [
+        |       ${tabs.asString()}
+        |   ]
+        |}
+    """.trimMargin()
+
+    private fun ArrayList<SerializedChatTab>.asString(): String {
+        var s = ""
+        for (i in this.indices) {
+            val tab = this[i]
+            s += """{
+                |   "title": "${tab.title}",
+                |   "filter": ${tab.filter.joinToString(separator = ",\n", prefix = "[\n", postfix = "]")},
+                |   "hide_in_all": ${tab.hideInAll},
+                |   "prefix": "${tab.prefix}"
+                |}
+            """.trimMargin()
+            if (i != this.lastIndex) s += ",\n"
+        }
+        return s
+    }
 }

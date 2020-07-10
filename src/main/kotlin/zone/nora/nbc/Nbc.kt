@@ -23,10 +23,13 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import net.minecraft.client.Minecraft
+import net.minecraft.util.ChatComponentText
+import net.minecraftforge.client.ClientCommandHandler
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.Mod.EventHandler
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
+import zone.nora.nbc.command.Command
 import zone.nora.nbc.gson.SerializedChatWindow
 import zone.nora.nbc.gui.NbcGuiInGame
 import zone.nora.nbc.util.EventListener
@@ -44,6 +47,8 @@ class Nbc {
         Minecraft.getMinecraft().ingameGUI = inGameGui
 
         MinecraftForge.EVENT_BUS.register(EventListener())
+
+        ClientCommandHandler.instance.registerCommand(Command())
     }
 
     companion object {
@@ -68,6 +73,9 @@ class Nbc {
             }
             return Gson().fromJson(jsonArray, typeToken<ArrayList<SerializedChatWindow>>())
         }
+
+        fun putChatMessage(str: String) =
+            Minecraft.getMinecraft().thePlayer.addChatMessage(ChatComponentText("[\u00a76NBC\u00a7f] $str"))
 
         private inline fun <reified T> typeToken() = object: TypeToken<T>() {}.type
 

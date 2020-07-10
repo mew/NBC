@@ -84,6 +84,10 @@ processResources
     }
 }
 
+reobf {
+    shadowJar { /*mappingType = 'SEARGE'*/ }
+}
+
 shadowJar {
     relocate("club.sk1er", "zone.nora.nbc.libs.club.sk1er")
 }

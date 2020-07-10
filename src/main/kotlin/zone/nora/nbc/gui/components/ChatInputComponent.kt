@@ -10,6 +10,7 @@ import club.sk1er.elementa.utils.getStringSplitToWidth
 import club.sk1er.mods.core.universal.UniversalGraphicsHandler
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
+import net.minecraftforge.client.ClientCommandHandler
 import java.awt.Color
 
 /**
@@ -93,7 +94,13 @@ open class ChatInputComponent @JvmOverloads constructor(
             } else if (keyCode == 28 || keyCode == 156) {
                 // 255
                 if (text.length < 256) {
-                    Minecraft.getMinecraft().thePlayer.sendChatMessage(text)
+                    var flag = false
+                    if (text.startsWith("/")) {
+                        if (ClientCommandHandler.instance.executeCommand(Minecraft.getMinecraft().thePlayer, text) != 0) {
+                            flag = true
+                        }
+                    }
+                    if (!flag) Minecraft.getMinecraft().thePlayer.sendChatMessage(text)
                     sentMessagesIndex = -1
                     mc.displayGuiScreen(null)
                     val chatWindow = (parent.parent) as ChatWindowComponent
