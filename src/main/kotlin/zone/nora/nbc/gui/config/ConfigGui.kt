@@ -20,11 +20,16 @@ package zone.nora.nbc.gui.config
 
 import club.sk1er.elementa.WindowScreen
 import club.sk1er.elementa.components.UIBlock
+import club.sk1er.elementa.components.UIText
+import club.sk1er.elementa.components.UITextInput
 import club.sk1er.elementa.constraints.CenterConstraint
+import club.sk1er.elementa.constraints.FillConstraint
 import club.sk1er.elementa.constraints.RelativeConstraint
+import club.sk1er.elementa.constraints.SiblingConstraint
 import club.sk1er.elementa.dsl.childOf
 import club.sk1er.elementa.dsl.constrain
 import club.sk1er.elementa.dsl.pixels
+import club.sk1er.elementa.dsl.width
 import zone.nora.nbc.Nbc
 import zone.nora.nbc.gson.SerializedChatTab
 import zone.nora.nbc.gson.SerializedChatWindow
@@ -51,7 +56,7 @@ class ConfigGui : WindowScreen() {
         selector = UIBlock(Color(30, 30, 30)).constrain {
             height = RelativeConstraint(.7f)
             width = RelativeConstraint(.9f)
-            x = 5.pixels()
+            x = CenterConstraint()
             y = CenterConstraint()
         } childOf mainWindow.body
 
@@ -72,7 +77,54 @@ class ConfigGui : WindowScreen() {
             y = 10.pixels(true)
             height = 15.pixels()
             width = 30.pixels()
-        } childOf mainWindow.body
+        }.onMouseClick {
+            if (selected == null) return@onMouseClick
+            if ((this as ConfigOptionButtonComponent).enabled) {
+                val chatWindow = chatWindowConfiguration[selected!!]
+                val chatWindowEditor = ConfigWindowComponent(chatWindow.title).constrain {
+                    x = CenterConstraint()
+                    y = CenterConstraint()
+                    height = 185.pixels()
+                    width = 125.pixels()
+                } childOf window
+
+                UIText("Window Title:").constrain {
+                    x = CenterConstraint()
+                    y = 5.pixels()
+                } childOf chatWindowEditor.body
+
+                val textHolder = UIBlock(Color(0, 0, 0)).constrain {
+                    x = CenterConstraint()
+                    y = SiblingConstraint(3f)
+                    height = 10.pixels()
+                    width = RelativeConstraint(.9f)
+                } childOf chatWindowEditor.body
+
+                val chatWindowTitle = UITextInput(chatWindow.title, false).constrain {
+                    x = 0.pixels()
+                    y = 0.pixels()
+                    height = FillConstraint()
+                    width = FillConstraint()
+                } childOf textHolder
+
+                chatWindowTitle.text = chatWindow.title
+
+                textHolder.onMouseClick { e ->
+                    chatWindowTitle.active = true
+                    e.stopPropagation()
+                }
+
+                chatWindowEditor.onMouseClick { e ->
+                    e.stopPropagation()
+                    chatWindowTitle.active = false
+                    if (chatWindowTitle.text.isNotEmpty()) {
+                        chatWindow.title = chatWindowTitle.text
+                        chatWindowEditor.bar.setTitle(chatWindow.title)
+                    }
+                }
+                
+            }
+        } as ConfigOptionButtonComponent childOf mainWindow.body
 
         deleteButton = ConfigOptionButtonComponent("Delete", false, Color(255, 0, 0)).constrain {
             x = 10.pixels(true)

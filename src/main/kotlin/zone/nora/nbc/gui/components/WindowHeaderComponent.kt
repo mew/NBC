@@ -10,6 +10,7 @@ import java.awt.Color
 class WindowHeaderComponent(windowTitle: String) : UIBlock(Color(255, 165, 0)) {
     var dragging = false
     var dragOffset = 0f to 0f
+    private val titleText: UIText
 
     init {
         constrain {
@@ -36,9 +37,12 @@ class WindowHeaderComponent(windowTitle: String) : UIBlock(Color(255, 165, 0)) {
             this.parent.setY(newY.pixels())
         }
 
-        UIText(windowTitle).constrain {
+        titleText = UIText(windowTitle).constrain {
             x = CenterConstraint()
             y = CenterConstraint()
         } childOf this
     }
+
+    fun setTitle(title: String) = titleText.setText(title)
+
 }

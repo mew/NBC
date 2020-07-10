@@ -22,7 +22,7 @@ import com.google.gson.annotations.SerializedName
 
 class SerializedChatWindow {
     @SerializedName("title")
-    val title: String = "Unnamed Chat Window"
+    var title: String = "Unnamed Chat Window"
 
     @SerializedName("constraints")
     val constraints: SerializedChatWindowConstraints = SerializedChatWindowConstraints()
