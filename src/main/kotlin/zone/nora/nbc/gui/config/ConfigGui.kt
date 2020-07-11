@@ -26,10 +26,8 @@ import club.sk1er.elementa.constraints.CenterConstraint
 import club.sk1er.elementa.constraints.FillConstraint
 import club.sk1er.elementa.constraints.RelativeConstraint
 import club.sk1er.elementa.constraints.SiblingConstraint
-import club.sk1er.elementa.dsl.childOf
-import club.sk1er.elementa.dsl.constrain
-import club.sk1er.elementa.dsl.pixels
-import club.sk1er.elementa.dsl.width
+import club.sk1er.elementa.constraints.animation.Animations
+import club.sk1er.elementa.dsl.*
 import zone.nora.nbc.Nbc
 import zone.nora.nbc.gson.SerializedChatTab
 import zone.nora.nbc.gson.SerializedChatWindow
@@ -39,7 +37,7 @@ import zone.nora.nbc.gui.components.ConfigWindowComponent
 import java.awt.Color
 
 class ConfigGui : WindowScreen() {
-    var chatWindowConfiguration = Nbc.configuration
+    /*var chatWindowConfiguration = Nbc.configuration
     var selected: Int? = null
     private val selector: UIBlock
     private val editButton: ConfigOptionButtonComponent
@@ -122,7 +120,7 @@ class ConfigGui : WindowScreen() {
                         chatWindowEditor.bar.setTitle(chatWindow.title)
                     }
                 }
-                
+
             }
         } as ConfigOptionButtonComponent childOf mainWindow.body
 
@@ -155,5 +153,170 @@ class ConfigGui : WindowScreen() {
                 deleteButton.changeState(true)
             } childOf selector
         }
+    }*/
+
+    private val configWindow: ConfigWindowComponent
+    private var chatWindowConfiguration = Nbc.configuration
+    private var currentWindow = 0
+    private var selected: Int? = null
+
+    init {
+        configWindow = ConfigWindowComponent("Nora's Better Chat").constrain {
+            x = CenterConstraint()
+            y = CenterConstraint()
+            height = 100.pixels()
+            width = 100.pixels()
+        } childOf window
+
+        main()
+    }
+
+    private fun main() {
+        newPage(125, 225, "Nora's Better Chat", 0)
+
+        val selector = UIBlock(Color(30, 30, 30)).constrain {
+            height = RelativeConstraint(.7f)
+            width = RelativeConstraint(.9f)
+            x = CenterConstraint()
+            y = CenterConstraint()
+        } childOf configWindow.body
+
+        val editButton = ConfigOptionButtonComponent("Edit", false).constrain {
+            x = CenterConstraint()
+            y = 10.pixels(true)
+            height = 15.pixels()
+            width = 30.pixels()
+        }
+
+        val deleteButton = ConfigOptionButtonComponent("Delete", false, Color(255, 0, 0)).constrain {
+            x = 10.pixels(true)
+            y = 10.pixels(true)
+            height = 15.pixels()
+            width = 30.pixels()
+        }
+
+        fun loadWindows() {
+            selector.clearChildren()
+            for (i in chatWindowConfiguration.indices) {
+                ConfigChatWindowComponent(chatWindowConfiguration[i].title, i).onMouseClick {
+                    selected = (this as ConfigChatWindowComponent).id
+                    editButton.changeState(true)
+                    deleteButton.changeState(true)
+                } childOf selector
+            }
+        }
+
+        ConfigOptionButtonComponent("Add", highlightColour = Color(0, 255, 0)).constrain {
+            x = 10.pixels()
+            y = 10.pixels(true)
+            height = 15.pixels()
+            width = 30.pixels()
+        }.onMouseClick {
+            val chatWindow = SerializedChatWindow()
+            chatWindow.tabs.add(SerializedChatTab())
+            chatWindowConfiguration.add(chatWindow)
+            loadWindows()
+        } childOf configWindow.body
+
+        deleteButton.onMouseClick {
+            if (selected == null) return@onMouseClick
+            if ((this as ConfigOptionButtonComponent).enabled) {
+                // fuckkkkkk null pointers. if null pointer here pls report.
+                chatWindowConfiguration.remove(chatWindowConfiguration[selected!!])
+                loadWindows()
+                this.changeState(false)
+                editButton.changeState(false)
+                selected = null
+            }
+        }
+
+        editButton.onMouseClick {
+            if (selected == null) return@onMouseClick
+            if ((this as ConfigOptionButtonComponent).enabled) editWindow(chatWindowConfiguration[selected!!])
+        }
+
+        editButton childOf configWindow.body
+        deleteButton childOf configWindow.body
+
+        loadWindows()
+    }
+
+    private fun editWindow(chatWindow: SerializedChatWindow) {
+        newPage(150, 200, chatWindow.title, 1)
+
+        UIText("Window Title:").constrain {
+            x = CenterConstraint()
+            y = 5.pixels()
+        } childOf configWindow.body
+
+        val textHolder = UIBlock(Color(0, 0, 0)).constrain {
+            x = CenterConstraint()
+            y = SiblingConstraint(3f)
+            height = 10.pixels()
+            width = RelativeConstraint(.9f)
+        } childOf configWindow.body
+
+        val chatWindowTitle = UITextInput(chatWindow.title, false).constrain {
+            x = 0.pixels()
+            y = 0.pixels()
+            height = FillConstraint()
+            width = FillConstraint()
+        } childOf textHolder
+
+        chatWindowTitle.text = chatWindow.title
+
+        textHolder.onMouseClick { e ->
+            chatWindowTitle.active = true
+            e.stopPropagation()
+        }
+
+        ConfigOptionButtonComponent("Edit Constraints").constrain {
+            x = CenterConstraint()
+            y = SiblingConstraint(3f)
+            height = 15.pixels()
+            width = RelativeConstraint(.9f)
+        } childOf configWindow.body
+        ConfigOptionButtonComponent("Edit Tabs").constrain {
+            x = CenterConstraint()
+            y = SiblingConstraint(3f)
+            height = 15.pixels()
+            width = RelativeConstraint(.9f)
+        } childOf configWindow.body
+
+        ConfigOptionButtonComponent("Back").constrain {
+            x = CenterConstraint()
+            y = 10.pixels(true)
+            height = 15.pixels()
+            width = RelativeConstraint(.9f)
+        }.onMouseClick {
+            main()
+        } childOf configWindow.body
+
+        configWindow.onMouseClick { e ->
+            e.stopPropagation()
+            if (currentWindow == 1) {
+                chatWindowTitle.active = false
+                if (chatWindowTitle.text.isNotEmpty()) {
+                    chatWindow.title = chatWindowTitle.text
+                    configWindow.bar.setTitle(chatWindow.title)
+                }
+            }
+        }
+    }
+
+    private fun editConstraints(chatWindow: SerializedChatWindow) {
+        newPage(150, 200, "${chatWindow.title} Constraints", 2)
+
+        
+    }
+
+    private fun newPage(width: Int, height: Int, windowTitle: String, id: Int) {
+        configWindow.body.clearChildren()
+        configWindow.animate {
+            setWidthAnimation(Animations.LINEAR, .25f, width.pixels())
+            setHeightAnimation(Animations.LINEAR, .25f, height.pixels())
+        }
+        configWindow.bar.setTitle(windowTitle)
+        currentWindow = id
     }
 }

@@ -43,6 +43,5 @@ class WindowHeaderComponent(windowTitle: String) : UIBlock(Color(255, 165, 0)) {
         } childOf this
     }
 
-    fun setTitle(title: String) = titleText.setText(title)
-
+    fun setTitle(title: String) = if (title == "") titleText.setText(" ") else titleText.setText(title)
 }

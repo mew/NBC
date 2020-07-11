@@ -68,7 +68,8 @@ class ConfigOptionButtonComponent(buttonText: String, var enabled: Boolean = tru
             }
         }
 
-        onMouseClick {
+        onMouseClick { e ->
+            e.stopPropagation()
             Minecraft.getMinecraft().soundHandler.playSound(
                 PositionedSoundRecord.create(ResourceLocation("gui.button.press"), 1.0F)
             )
