@@ -123,13 +123,14 @@ class ChatTabComponent(val tabConfig: SerializedChatTab) : UIBlock(Color(0, 0, 0
 
     fun addChatMessage(chat: TimedChatLine) {
         chatHistory.add(chat)
+        val chatWindow = (parent.parent.parent as ChatWindowComponent)
         if (!active) {
             notificationBar.animate {
-                setColorAnimation(Animations.LINEAR, 0.2f, Color(200, 200, 0).asConstraint())
+                setColorAnimation(Animations.LINEAR, 0.2f, chatWindow.windowConfig.colour.getColour().asConstraint())
             }
             unread = true
         } else {
-            (parent.parent.parent as ChatWindowComponent).addChatMessageToCurrentTab(chat)
+            chatWindow.addChatMessageToCurrentTab(chat)
         }
     }
 }

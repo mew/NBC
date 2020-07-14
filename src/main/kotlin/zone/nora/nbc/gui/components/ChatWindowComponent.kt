@@ -118,7 +118,7 @@ class ChatWindowComponent(val windowConfig: SerializedChatWindow) : UIBlock(Colo
             width = FillConstraint()
         } childOf visibleTimestampHolder
 
-        UIBlock(Color(200, 200, 0)).constrain {
+        UIBlock(windowConfig.colour.getColour()).constrain {
             x = 0.pixels()
             y = 20.pixels()
 
