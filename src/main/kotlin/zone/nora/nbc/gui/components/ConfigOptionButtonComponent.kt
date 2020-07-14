@@ -80,6 +80,7 @@ open class ConfigOptionButtonComponent(buttonText: String, var enabled: Boolean 
     fun changeState(enable: Boolean) {
         enabled = enable
         actualButton.setColor(getColour().asConstraint())
+        btnText.setColor(Color(255, 255, 255).asConstraint())
     }
 
     private fun getColour(): Color = if (enabled) Color(140, 140, 140) else Color(80, 80, 80)

@@ -33,6 +33,7 @@ import zone.nora.nbc.gui.chat.NbcChatGui
 import zone.nora.nbc.gui.components.*
 import java.awt.Color
 
+// This may be the worst code I have ever written in my entire life.
 class ConfigGui : WindowScreen() {
     private val configWindow: ConfigWindowComponent = ConfigWindowComponent("Nora's Better Chat").constrain {
         x = CenterConstraint()
@@ -398,7 +399,7 @@ class ConfigGui : WindowScreen() {
     }
 
     private fun editFilters(chatWindow: SerializedChatWindow, chatTab: SerializedChatTab) {
-        newPage(125, 240, "${chatTab.title} Filters", 6)
+        newPage(125, 300, "${chatTab.title} Filters", 6)
 
         var selected: Int? = null
 
@@ -410,10 +411,10 @@ class ConfigGui : WindowScreen() {
         } childOf configWindow.body
 
         val deleteButton = ConfigOptionButtonComponent("Delete", false, Color(255, 0, 0)).constrain {
-            x = 10.pixels(true)
-            y = 40.pixels(true)
+            x = CenterConstraint()
+            y = SiblingConstraint(3f)
             height = 15.pixels()
-            width = 40.pixels()
+            width = RelativeConstraint(.9f)
         }
 
         fun loadFilter() {
@@ -426,16 +427,6 @@ class ConfigGui : WindowScreen() {
             }
         }
 
-        ConfigOptionButtonComponent("Add", highlightColour = Color(0, 255, 0)).constrain {
-            x = 10.pixels()
-            y = 40.pixels(true)
-            height = 15.pixels()
-            width = 40.pixels()
-        }.onMouseClick {
-            chatTab.filter.add("temp")
-            loadFilter()
-        } childOf configWindow.body
-
         deleteButton.onMouseClick {
             if (selected == null) return@onMouseClick
             if ((this as ConfigOptionButtonComponent).enabled) {
@@ -447,6 +438,29 @@ class ConfigGui : WindowScreen() {
         }
 
         deleteButton childOf configWindow.body
+
+        val filter = ConfigTextInputComponent(112.5f, "", TextInputComponent.Restrictions.NONE).constrain {
+            y = SiblingConstraint(5f)
+        } childOf configWindow.body
+
+        ConfigOptionButtonComponent("Add", highlightColour = Color(0, 255, 0)).constrain {
+            x = CenterConstraint()
+            y = SiblingConstraint(3f)
+            height = 15.pixels()
+            width = RelativeConstraint(.9f)
+        }.onMouseClick {
+            filter.textInput.active = false
+            if (filter.textInput.text.isNotEmpty()) {
+                chatTab.filter.add(filter.textInput.text)
+                filter.textInput.text = ""
+            }
+            loadFilter()
+        } childOf configWindow.body
+
+        configWindow.onMouseClick { e ->
+            e.stopPropagation()
+            if (currentWindow == 6) filter.textInput.active = false
+        }
 
         ConfigBackButtonComponent().onMouseClick { editTab(chatWindow, chatTab) } childOf configWindow.body
 
