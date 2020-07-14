@@ -29,8 +29,9 @@ import net.minecraft.client.audio.PositionedSoundRecord
 import net.minecraft.util.ResourceLocation
 import java.awt.Color
 
-class ConfigOptionButtonComponent(buttonText: String, var enabled: Boolean = true, highlightColour: Color = Color(255, 255, 0)) : UIBlock(Color(0, 0, 0)) {
+open class ConfigOptionButtonComponent(buttonText: String, var enabled: Boolean = true, highlightColour: Color = Color(255, 255, 0)) : UIBlock(Color(0, 0, 0)) {
     val actualButton: UIBlock
+    val btnText: UIText
 
     init {
         actualButton = UIBlock(getColour()).constrain {
@@ -40,7 +41,7 @@ class ConfigOptionButtonComponent(buttonText: String, var enabled: Boolean = tru
             height = RelativeConstraint(1f) - 2.pixels()
         } childOf this
 
-        val text = UIText(buttonText).constrain {
+        btnText = UIText(buttonText).constrain {
             x = CenterConstraint()
             y = CenterConstraint()
             textScale = .8f.pixels()
@@ -51,7 +52,7 @@ class ConfigOptionButtonComponent(buttonText: String, var enabled: Boolean = tru
                 actualButton.animate {
                     setColorAnimation(Animations.LINEAR, .2f, Color(180, 180, 180).asConstraint())
                 }
-                text.animate {
+                btnText.animate {
                     setColorAnimation(Animations.LINEAR, .2f, highlightColour.asConstraint())
                 }
             }
@@ -62,7 +63,7 @@ class ConfigOptionButtonComponent(buttonText: String, var enabled: Boolean = tru
                 actualButton.animate {
                     setColorAnimation(Animations.LINEAR, .2f, Color(140, 140, 140).asConstraint())
                 }
-                text.animate {
+                btnText.animate {
                     setColorAnimation(Animations.LINEAR, .2f, Color(255, 255, 255).asConstraint())
                 }
             }

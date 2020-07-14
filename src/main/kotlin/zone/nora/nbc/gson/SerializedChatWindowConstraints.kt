@@ -28,8 +28,8 @@ class SerializedChatWindowConstraints {
     val y: SerializedPosition = SerializedPosition()
 
     @SerializedName("width")
-    val width: Float = 350f
+    var width: Float = 350f
 
     @SerializedName("height")
-    val height: Float = 200f
+    var height: Float = 200f
 }

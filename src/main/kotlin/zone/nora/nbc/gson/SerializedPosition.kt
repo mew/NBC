@@ -22,8 +22,8 @@ import com.google.gson.annotations.SerializedName
 
 class SerializedPosition {
     @SerializedName("position")
-    val position: Float = 0f
+    var position: Float = 0f
 
     @SerializedName("align_opposite")
-    val alignOpposite: Boolean = false
+    var alignOpposite: Boolean = false
 }

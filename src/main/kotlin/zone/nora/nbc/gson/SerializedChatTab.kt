@@ -22,14 +22,14 @@ import com.google.gson.annotations.SerializedName
 
 class SerializedChatTab {
     @SerializedName("title")
-    val title: String = "Unspecified"
+    var title: String = "Unspecified"
 
     @SerializedName("filter")
     val filter: ArrayList<String> = ArrayList()
 
     @SerializedName("hide_in_all")
-    val hideInAll: Boolean = false
+    var hideInAll: Boolean = false
 
     @SerializedName("prefix")
-    val prefix: String = ""
+    var prefix: String = ""
 }

@@ -16,20 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package zone.nora.nbc.gson
+package zone.nora.nbc.gui.components
 
-import com.google.gson.annotations.SerializedName
-import java.awt.Color
+import club.sk1er.elementa.constraints.CenterConstraint
+import club.sk1er.elementa.constraints.RelativeConstraint
+import club.sk1er.elementa.dsl.constrain
+import club.sk1er.elementa.dsl.pixels
 
-class SerializedColour {
-    @SerializedName("red")
-    var red: Int = 200
-
-    @SerializedName("green")
-    var green: Int = 200
-
-    @SerializedName("blue")
-    var blue: Int = 0
-
-    fun getColour(): Color = Color(red, green, blue)
+class ConfigBackButtonComponent : ConfigOptionButtonComponent("Back") {
+    init {
+        constrain {
+            x = CenterConstraint()
+            y = 10.pixels(true)
+            height = 15.pixels()
+            width = RelativeConstraint(.9f)
+        }
+    }
 }

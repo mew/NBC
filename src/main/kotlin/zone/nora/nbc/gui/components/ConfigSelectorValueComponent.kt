@@ -27,7 +27,7 @@ import club.sk1er.elementa.dsl.asConstraint
 import club.sk1er.elementa.dsl.constrain
 import java.awt.Color
 
-class ConfigChatWindowComponent(title: String, val id: Int) : UIText(title) {
+class ConfigSelectorValueComponent(title: String, val id: Int) : UIText(title) {
     var selected = false
 
     init {
@@ -53,7 +53,7 @@ class ConfigChatWindowComponent(title: String, val id: Int) : UIText(title) {
         }
 
         onMouseClick {
-            parent.childrenOfType<ConfigChatWindowComponent>().forEach {
+            parent.childrenOfType<ConfigSelectorValueComponent>().forEach {
                 it.deselect()
             }
             setColor(Color(255, 255, 0).asConstraint())
