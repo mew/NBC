@@ -49,10 +49,18 @@ class Nbc {
         MinecraftForge.EVENT_BUS.register(EventListener())
 
         ClientCommandHandler.instance.registerCommand(Command())
+
+        colourChatMod = try {
+            Class.forName("zone.nora.colourchat.ColourChat")
+            true
+        } catch (_: Exception) {
+            false
+        }
     }
 
     companion object {
         lateinit var inGameGui: NbcGuiInGame
+        var colourChatMod: Boolean = false
         var configuration: ArrayList<SerializedChatWindow> = ArrayList()
 
         fun configDirectory(): String = "${Minecraft.getMinecraft().mcDataDir}/NBC/"

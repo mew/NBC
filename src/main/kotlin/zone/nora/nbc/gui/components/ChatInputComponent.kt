@@ -10,7 +10,9 @@ import club.sk1er.elementa.utils.getStringSplitToWidth
 import club.sk1er.mods.core.universal.UniversalGraphicsHandler
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
+import net.minecraft.network.play.client.C01PacketChatMessage
 import net.minecraftforge.client.ClientCommandHandler
+import zone.nora.nbc.Nbc
 import java.awt.Color
 
 /**
@@ -94,13 +96,24 @@ open class ChatInputComponent @JvmOverloads constructor(
             } else if (keyCode == 28 || keyCode == 156) {
                 // 255
                 if (text.length < 256) {
-                    var flag = false
-                    if (text.startsWith("/")) {
-                        if (ClientCommandHandler.instance.executeCommand(Minecraft.getMinecraft().thePlayer, text) != 0) {
-                            flag = true
+                    mc.ingameGUI.chatGUI.addToSentMessages(text)
+                    if (text.startsWith("/") && ClientCommandHandler.instance.executeCommand(mc.thePlayer, text) != 0)
+                        return@onKeyType
+                    if (Nbc.colourChatMod) {
+                        mc.thePlayer.sendChatMessage(text)
+                    } else {
+                        val c01PacketChatMessage = C01PacketChatMessage(text)
+                        if (text.length > 100) {
+                            try {
+                                val field = c01PacketChatMessage::class.java.getDeclaredField("message")
+                                field.isAccessible = true
+                                field.set(c01PacketChatMessage, text)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
                         }
+                        mc.thePlayer.sendQueue.addToSendQueue(c01PacketChatMessage)
                     }
-                    if (!flag) Minecraft.getMinecraft().thePlayer.sendChatMessage(text)
                     sentMessagesIndex = -1
                     mc.displayGuiScreen(null)
                     val chatWindow = (parent.parent) as ChatWindowComponent
