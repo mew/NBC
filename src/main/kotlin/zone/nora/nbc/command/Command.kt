@@ -39,7 +39,7 @@ class Command : CommandBase() {
         } else {
             when (args[0].toLowerCase()) {
                 "r", "refresh" -> {
-                    Nbc.refreshChatConfig()
+                    Nbc.configuration = Nbc.refreshChatConfig()
                     NbcChatGui.window.clearChildren()
                     NbcChatGui.addWindows()
                     Nbc.putChatMessage("ok!")

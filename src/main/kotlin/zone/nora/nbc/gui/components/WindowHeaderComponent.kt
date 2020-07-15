@@ -5,6 +5,7 @@ import club.sk1er.elementa.components.UIText
 import club.sk1er.elementa.constraints.CenterConstraint
 import club.sk1er.elementa.constraints.RelativeConstraint
 import club.sk1er.elementa.dsl.*
+import club.sk1er.elementa.effects.ScissorEffect
 import java.awt.Color
 
 class WindowHeaderComponent(windowTitle: String) : UIBlock(Color(255, 165, 0)) {
@@ -36,6 +37,8 @@ class WindowHeaderComponent(windowTitle: String) : UIBlock(Color(255, 165, 0)) {
             this.parent.setX(newX.pixels())
             this.parent.setY(newY.pixels())
         }
+
+        this effect ScissorEffect()
 
         titleText = UIText(windowTitle).constrain {
             x = CenterConstraint()

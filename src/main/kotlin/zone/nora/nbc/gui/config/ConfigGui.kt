@@ -26,12 +26,16 @@ import club.sk1er.elementa.constraints.RelativeConstraint
 import club.sk1er.elementa.constraints.SiblingConstraint
 import club.sk1er.elementa.constraints.animation.Animations
 import club.sk1er.elementa.dsl.*
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import org.apache.logging.log4j.LogManager
 import zone.nora.nbc.Nbc
 import zone.nora.nbc.gson.SerializedChatTab
 import zone.nora.nbc.gson.SerializedChatWindow
 import zone.nora.nbc.gui.chat.NbcChatGui
 import zone.nora.nbc.gui.components.*
 import java.awt.Color
+import java.io.File
 
 // This may be the worst code I have ever written in my entire life.
 class ConfigGui : WindowScreen() {
@@ -50,7 +54,7 @@ class ConfigGui : WindowScreen() {
     }
 
     private fun main() {
-        newPage(125, 225, "Nora's Better Chat", 0)
+        newPage(125, 255, "Nora's Better Chat", 0)
         configWindow.bar.animate {
             setColorAnimation(Animations.IN_OUT_SIN, .2f, Color(255, 165, 0).asConstraint())
         }
@@ -66,14 +70,14 @@ class ConfigGui : WindowScreen() {
 
         val editButton = ConfigOptionButtonComponent("Edit", false).constrain {
             x = CenterConstraint()
-            y = 10.pixels(true)
+            y = 20.pixels(true)
             height = 15.pixels()
             width = 30.pixels()
         }
 
         val deleteButton = ConfigOptionButtonComponent("Delete", false, Color(255, 0, 0)).constrain {
             x = 10.pixels(true)
-            y = 10.pixels(true)
+            y = 20.pixels(true)
             height = 15.pixels()
             width = 30.pixels()
         }
@@ -91,7 +95,7 @@ class ConfigGui : WindowScreen() {
 
         ConfigOptionButtonComponent("Add", highlightColour = Color(0, 255, 0)).constrain {
             x = 10.pixels()
-            y = 10.pixels(true)
+            y = 20.pixels(true)
             height = 15.pixels()
             width = 30.pixels()
         }.onMouseClick {
@@ -121,6 +125,20 @@ class ConfigGui : WindowScreen() {
         editButton childOf configWindow.body
         deleteButton childOf configWindow.body
 
+
+        ConfigOptionButtonComponent("Save to File", highlightColour = Color(0, 255, 0)).constrain {
+            x = CenterConstraint()
+            y = 3.pixels(true)
+            width = RelativeConstraint(.9f)
+            height = 15.pixels()
+        }.onMouseClick {
+            val configAsString = GsonBuilder().setPrettyPrinting().create().toJson(chatWindowConfiguration)
+            LogManager.getLogger().info("Saving to file:\n$configAsString")
+            val chatConfigFile = File("${Nbc.configDirectory()}ChatWindows.json")
+            if (!chatConfigFile.exists()) chatConfigFile.createNewFile()
+            chatConfigFile.writeText(configAsString)
+            mc.displayGuiScreen(null)
+        } childOf configWindow.body
         loadWindows()
     }
 
@@ -478,7 +496,6 @@ class ConfigGui : WindowScreen() {
     }
 
     override fun onGuiClosed() {
-        Nbc.refreshChatConfig()
         NbcChatGui.window.clearChildren()
         NbcChatGui.addWindows()
         Nbc.putChatMessage("ok!")
