@@ -92,6 +92,7 @@ open class ChatInputComponent @JvmOverloads constructor(
                     } catch (_: Exception) { "" }
                 }
             } else if (keyCode == 15) {
+                Nbc.putChatMessage("Tab completion is coming soon\u2122!!")
                 // TODO add tab completion.
             } else if (keyCode == 28 || keyCode == 156) {
                 // 255

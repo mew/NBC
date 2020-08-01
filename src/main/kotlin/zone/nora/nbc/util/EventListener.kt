@@ -19,9 +19,10 @@ class EventListener {
 
     @SubscribeEvent
     fun onRenderTick(e: TickEvent.RenderTickEvent) {
-        if (Minecraft.getMinecraft().currentScreen != null && Minecraft.getMinecraft().currentScreen !is GuiChat) return
-        if (e.phase != TickEvent.Phase.END) return
-        try { NbcChatGui.window.draw() } catch (_: Exception) { }
+        if (e.phase == TickEvent.Phase.END) {
+            if (Minecraft.getMinecraft().currentScreen != null && Minecraft.getMinecraft().currentScreen !is GuiChat) return
+            try { NbcChatGui.window.draw() } catch (_: Exception) { }
+        }
     }
 
     @SubscribeEvent
